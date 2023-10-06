@@ -1,0 +1,163 @@
+-- Explore the dataset. How many unique customers are there?
+
+SELECT COUNT (DISTINCT ID) AS Distinct_Customers
+  FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. What is the range of birth years?
+
+SELECT 
+MIN(Year_Birth) AS oldest, 
+MAX(Year_Birth) AS youngest
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. How many different educational levels are represented?
+
+SELECT 
+DISTINCT(Education) AS ED_Levels
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. Which different marital statuses are represented?
+
+SELECT 
+DISTINCT(Marital_Status) AS Marital_Status
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. Which income ranges are represented?
+
+SELECT 
+MIN(Income) AS Min_Income, 	
+MAX(Income) AS Max_Income
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. What is the range of time over which these customers made their first purchase?
+
+SELECT 
+MIN(Dt_Customer) AS Min_StartDate, 
+MAX(Dt_Customer) AS Max_StartDate
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. What is the range of time over which these customers made their most recent purchase?
+
+SELECT 
+MIN(Recency) AS Min_Recency, 
+MAX(Recency) AS Max_Recency
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. What is the average spend on each of the categories? This includes all categories for all customers listed, so if a customer didn't spend any mony in a given category, a 0 value will be factored in.
+
+SELECT
+  ROUND(AVG(MntWines), 0) AS Avg_Wines,
+  ROUND(AVG(MntFruits), 0) AS Avg_Fruits,
+  ROUND(AVG(MntMeats), 0) AS Avg_Meats,
+  ROUND(AVG(MntFish),0) AS Avg_Fish,
+  ROUND(AVG(MntSweets),0) AS Avg_Sweets,
+  ROUND(AVG(MntGold),0) AS Avg_Gold,
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. What is the average number of purchases made with a discount, purchases online, throught the catalogue, in store, and how many visits are made on average to the website per month?
+
+SELECT
+  ROUND(AVG(DealsPurchases), 0) AS Avg_DealPurchases,
+  ROUND(AVG(WebPurchases), 0) AS Avg_WebPurchases,
+  ROUND(AVG(CatalogPurchases), 0) AS Avg_CataloguePurchases,
+  ROUND(AVG(StorePurchases),0) AS Avg_StorePurchases,
+  ROUND(AVG(WebVisitsMonth),0) AS Avg_WebVisits,
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. What is the accept rate per campaign?
+
+SELECT
+  ROUND(SUM(Cmp1)/COUNT(Cmp1),3) AS AR_CMP1,
+  ROUND(SUM(Cmp2)/COUNT(Cmp2),3) AS AR_CMP2,
+  ROUND(SUM(Cmp3)/COUNT(Cmp3),3) AS AR_CMP3,
+  ROUND(SUM(Cmp4)/COUNT(Cmp4),3) AS AR_CMP4,
+  ROUND(SUM(Cmp5)/COUNT(Cmp5),3) AS AR_CMP5 ,
+  ROUND(SUM(Response)/COUNT(Response),3) AS Respopnse
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Explore the dataset. Find the Min, Max and Average cost contact and revenue.
+
+SELECT
+  MIN(CostContact) AS Min_Cost,
+  AVG(CostContact) AS Avt_Cost,
+  MAX(CostContact) AS MAX_Cost,
+  MIN(Revenue) AS Min_Revenue,
+  AVG(Revenue) AS Avg_Revenue,
+  MAX(Revenue) AS Max_Revenue
+ FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+
+
+
+-- Add classifications about age and income to the dataset using case statements. I assume the data was gathered in 2016, so use this to calculate age. Save the new dataset as Customers_Categorized.
+
+SELECT
+  ID,
+  Year_Birth,
+  2016 - Year_Birth AS Age,
+  CASE
+    WHEN (2016 - Year_Birth) >= 20 AND (2016 - Year_Birth) <= 29 THEN '20s'
+    WHEN (2016 - Year_Birth) >= 30 AND (2016 - Year_Birth) <= 39 THEN '30s'
+    WHEN (2016 - Year_Birth) >= 40 AND (2016 - Year_Birth) <= 49 THEN '40s'
+    WHEN (2016 - Year_Birth) >= 50 AND (2016 - Year_Birth) <= 59 THEN '50s'
+    WHEN (2016 - Year_Birth) >= 60 AND (2016 - Year_Birth) <= 99 THEN '60plus'
+    ELSE 'unknown'
+  END AS Age_Group,
+  Education,
+  Marital_Status,
+  Income,
+  CASE
+    WHEN Income <= 30000 THEN 'Very Low'
+    WHEN Income > 30000 AND Income <= 50000 THEN 'Low'
+    WHEN Income > 50000 AND Income <= 70000 THEN 'Middle'
+    WHEN Income > 70000 AND Income <= 100000 THEN 'Upper Middle'
+    WHEN Income > 100000 THEN 'High'
+    ELSE 'unknown'
+  END AS Income_Bracket,
+  KidHome,
+  TeenHome,
+  Dt_Customer,
+  Recency,
+  MntWines,
+  MntFruits,
+  MntMeats,
+  MntFish,
+  MntSweets,
+  MntGold,
+  MntWines + MntFruits + MntMeats + MntFish + MntSweets + MntGold AS MntTotal,
+  DealsPurchases,
+  WebPurchases,
+  CatalogPurchases,
+  StorePurchases,
+  WebVisitsMonth,
+  Cmp1,
+  Cmp2,
+  Cmp3,
+  Cmp4,
+  Cmp5,
+  Response AS Cmp6,
+  Complaint,
+  CostContact,
+  Revenue
+FROM `august-snowfall-368117.Marketing.MarketingCampaign`
+ORDER BY Age ASC
+
